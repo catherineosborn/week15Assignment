@@ -1,0 +1,28 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: end;
+}
+
+.card {
+  padding: 2em;
+}
+
+.userContainer {
+  display: flex;
+  margin-top: 2em;
+  border: 1px solid black;
+  padding: 5px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.infoBox {
+  padding: 10px;
+  border-right: 1px solid black;
+}
+
+.formBox {
+  padding: 10px;
+}
