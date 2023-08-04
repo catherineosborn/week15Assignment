@@ -2,12 +2,15 @@ import { useState } from "react";
 
 export default function NewUserForm (){
 
+    const MOCK_API_URL = 'https://6496b26383d4c69925a3054f.mockapi.io/user'
+
     const [newUserName, setNewUserName] = useState('')
     const [newUserJobTitle, setNewUserJobTitle] = useState('')
-     const [newUserCompanyName, setNewUserCompanyName] = useState('')
+    const [newUserCompanyName, setNewUserCompanyName] = useState('')
 
     function postNewUser(e){
         e.preventDefault()
+        console.log("Submitting new user...");
   
         let data = {
         name: newUserName,
@@ -15,11 +18,28 @@ export default function NewUserForm (){
         companyName: newUserCompanyName,
         }
   
+        console.log("Data: ", data);
+
         fetch(MOCK_API_URL, {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-        }).then(() => getUsers())
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("API Response:", data);
+            setNewUserName('');
+            setNewUserJobTitle('');
+            setNewUserCompanyName('');
+        })
+        .catch(error => {
+            console.error("Error:", error);
+        });    
     }
 
     return (

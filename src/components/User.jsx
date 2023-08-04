@@ -1,53 +1,57 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UpdateForm from "./UpdateForm";
 
 export default function User() {
+    const MOCK_API_URL = 'https://6496b26383d4c69925a3054f.mockapi.io/user';
 
-    const [users, setUsers] = useState([{
-        name: 'Catherine',
-        jobTitle: 'Ministry Assistant',
-        companyName: 'Calvary Christian Church'
-      }])
+    const [users, setUsers] = useState([]);
 
-    const [updatedName, setUpdatedName] = useState('')
-    const [updatedJobTitle, setUpdatedJobTitle] = useState('')
-    const [updatedCompanyName, setUpdatedCompanyName] = useState('')
+    function getUsers() {
+        fetch(MOCK_API_URL)
+            .then(data => data.json())
+            .then(data => setUsers(data));
+    }
 
-    function updateUser(e, userObject){
-        e.preventDefault()
-      
-        let updatedUserObject = {
-          ...userObject,
-          name: updatedName,
-          jobTitle: updatedJobTitle,
-          companyName: updatedCompanyName,
-        }
-      
-        fetch(`${MOCK_API_URL}/${userObject.id}`, {
-          method: 'PUT',
-          body: JSON.stringify(updatedUserObject),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }).then(() => getUsers())
-      }
+    useEffect(() => {
+        console.log('User component mounted');
+        getUsers();
+    }, []);
 
-      return (
+    function deleteUser(id) {
+        console.log('Deleting user: ', id);
+        fetch(`${MOCK_API_URL}/${id}`, {
+            method: 'DELETE'
+        }).then(() => {
+            console.log('User deleted: ', id);
+            const updatedUsers = users.filter(user => user.id !== id);
+            setUsers(updatedUsers);
+        });
+    }
+
+    function updateUser(updatedUser) {
+        const updatedUsers = users.map(user =>
+            user.id === updatedUser.id ? updatedUser : user
+        );
+        setUsers(updatedUsers);
+    }    
+
+    return (
         <div>
-        {users.map((user, index) => (
-            <div className='userContainer' key={index}>
-              <div className='infoBox'>
-                <h3>User Info</h3>
-                Name: {user.name} <br></br>
-                Job Title: {user.jobTitle} <br></br>
-                Company Name: {user.companyName} <br></br> 
-                <button onClick={() => deleteUser(user.id)}>Delete</button>
-              </div>
-            <UpdateForm
-            updateUser={updateUser}
-            />
-            </div>
-          ))}
-          </div>
-      )
+            {users.map((user) => (
+                <div className='userContainer' key={user.id}>
+                    <div className='infoBox'>
+                        <h3>User Info</h3>
+                        Name: {user.name} <br />
+                        Job Title: {user.jobTitle} <br />
+                        Company Name: {user.companyName} <br />
+                        <button onClick={() => deleteUser(user.id)}>Delete</button>
+                    </div>
+                    <UpdateForm
+                        user={user}
+                        updateUser={updateUser}
+                    />
+                </div>
+            ))}
+        </div>
+    );
 }

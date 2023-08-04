@@ -1,50 +1,48 @@
-import { useState } from "react"
+import React, { useState } from "react";
 
+export default function UpdateForm({ user, updateUser, setUpdatedName, setUpdatedJobTitle, setUpdatedCompanyName }) {
+    const MOCK_API_URL = 'https://6496b26383d4c69925a3054f.mockapi.io/user';
 
-export default function UpdateForm() {
+    function handleUpdate(e) {
+        e.preventDefault();
 
-    const [users, setUsers] = useState([{
-        name: 'Catherine',
-        jobTitle: 'Ministry Assistant',
-        companyName: 'Calvary Christian Church'
-      }])
+        const updatedUser = {
+            ...user,
+            name: setUpdatedName,
+            jobTitle: setUpdatedJobTitle,
+            companyName: setUpdatedCompanyName,
+        };
 
-    const [updatedName, setUpdatedName] = useState('')
-    const [updatedJobTitle, setUpdatedJobTitle] = useState('')
-    const [updatedCompanyName, setUpdatedCompanyName] = useState('')
+        console.log('Updating user:', updatedUser);
 
-    function updateUser(e, userObject){
-        e.preventDefault()
-  
-        let updatedUserObject = {
-        ...userObject,
-        name: updatedName,
-        jobTitle: updatedJobTitle,
-        companyName: updatedCompanyName,
-        }
-  
-        fetch(`${MOCK_API_URL}/${userObject.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(updatedUserObject),
-        headers: {
-            "Content-Type": "application/json"
-        }
-        }).then(() => getUsers())
+        fetch(`${MOCK_API_URL}/${user.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(updatedUser),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(() => {
+            console.log('User updated: ', updatedUser);
+            updateUser(updatedUser);
+
+            setUpdatedName('');
+            setUpdatedJobTitle('');
+            setUpdatedCompanyName('');
+        });
     }
 
-
-    return(
+    return (
         <form className='formBox'>
-        <h3>Update User</h3>
-        <div className='updateFormContainer'>
-        <label>Update Name: </label>
-        <input onChange={(e) => setUpdatedName(e.target.value)}></input> <br></br>
-        <label>Update Job Title: </label>
-        <input onChange={(e) => setUpdatedJobTitle(e.target.value)}></input><br></br>
-        <label>Update Company Name: </label>
-        <input onChange={(e) => setUpdatedCompanyName(e.target.value)}></input><br></br>
-        <button onClick={(e) => updateUser(e, user)}>Update</button>
-        </div>
-    </form>
-    )
+            <h3>Update User</h3>
+            <div className='updateFormContainer'>
+                <label>Update Name: </label>
+                <input onChange={(e) => setUpdatedName(e.target.value)} value={setUpdatedName} /> <br />
+                <label>Update Job Title: </label>
+                <input onChange={(e) => setUpdatedJobTitle(e.target.value)} value={setUpdatedJobTitle} /><br />
+                <label>Update Company Name: </label>
+                <input onChange={(e) => setUpdatedCompanyName(e.target.value)} value={setUpdatedCompanyName} /><br />
+                <button onClick={handleUpdate}>Update</button>
+            </div>
+        </form>
+    );
 }
