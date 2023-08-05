@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function NewUserForm (){
+export default function NewUserForm ({ postNewUser, handleNewUser }){
 
     const MOCK_API_URL = 'https://6496b26383d4c69925a3054f.mockapi.io/user'
 
@@ -33,6 +33,7 @@ export default function NewUserForm (){
         })
         .then(data => {
             console.log("API Response:", data);
+            handleNewUser(data);
             setNewUserName('');
             setNewUserJobTitle('');
             setNewUserCompanyName('');

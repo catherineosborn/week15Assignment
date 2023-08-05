@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 
-export default function UpdateForm({ user, updateUser, setUpdatedName, setUpdatedJobTitle, setUpdatedCompanyName }) {
+export default function UpdateForm({ user, updateUser}) {
     const MOCK_API_URL = 'https://6496b26383d4c69925a3054f.mockapi.io/user';
+
+    const [name, setUpdatedName] = useState("")
+    const [jobTitle, setUpdatedJobTitle] = useState("")
+    const [companyName, setUpdatedCompanyName] = useState("")
+
 
     function handleUpdate(e) {
         e.preventDefault();
 
+        console.log('Updating user with data: ', name, jobTitle, companyName);
+
         const updatedUser = {
             ...user,
-            name: setUpdatedName,
-            jobTitle: setUpdatedJobTitle,
-            companyName: setUpdatedCompanyName,
+            name: name,
+            jobTitle: jobTitle,
+            companyName: companyName,
         };
 
         console.log('Updating user:', updatedUser);
@@ -36,11 +43,11 @@ export default function UpdateForm({ user, updateUser, setUpdatedName, setUpdate
             <h3>Update User</h3>
             <div className='updateFormContainer'>
                 <label>Update Name: </label>
-                <input onChange={(e) => setUpdatedName(e.target.value)} value={setUpdatedName} /> <br />
+                <input onChange={(e) => setUpdatedName(e.target.value)} value={name} /> <br />
                 <label>Update Job Title: </label>
-                <input onChange={(e) => setUpdatedJobTitle(e.target.value)} value={setUpdatedJobTitle} /><br />
+                <input onChange={(e) => setUpdatedJobTitle(e.target.value)} value={jobTitle} /><br />
                 <label>Update Company Name: </label>
-                <input onChange={(e) => setUpdatedCompanyName(e.target.value)} value={setUpdatedCompanyName} /><br />
+                <input onChange={(e) => setUpdatedCompanyName(e.target.value)} value={companyName} /><br />
                 <button onClick={handleUpdate}>Update</button>
             </div>
         </form>

@@ -10,11 +10,15 @@ export default function UserDatabase() {
   function getUsers(){
     fetch(MOCK_API_URL)
       .then(data => data.json())
-      //.then(data => setUsers(data))
+      .then(data => setUsers(data))
   }
 
+  function handleNewUser(newUser) {
+    setUsers([...users, newUser]);
+}
+
   useEffect (() => {
-    getUsers();
+    getUsers()
   }, []);
 
   function deleteUser(id){
@@ -43,8 +47,9 @@ export default function UserDatabase() {
 
   return (
     <div className="App">
-      <NewUserForm postNewUser={postNewUser} />
-      {users.map((user) => (
+       <NewUserForm postNewUser={postNewUser} handleNewUser={handleNewUser}/>
+        {users.map((user) => (
+          
         <User
           key={user.id}
           user={user}
